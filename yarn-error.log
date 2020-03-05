@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/Cellar/yarn/1.22.0/libexec/bin/yarn.js info prisma2@ --json
+
+PATH: 
+  /Users/prisma/Downloads/google-cloud-sdk/bin:/Users/prisma/.serverless/bin:/Users/prisma/.sdkman/candidates/java/current/bin:/Users/prisma/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/usr/local/bin:/Users/prisma/go/bin:/Users/prisma/dev/flutter/bin:/Users/prisma/Library/Python/3.7/bin
+
+Yarn version: 
+  1.22.0
+
+Node version: 
+  10.16.3
+
+Platform: 
+  darwin x64
+
+Trace: 
+  TypeError: Cannot read property '1' of null
+      at parsePackageName (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:101118:29)
+      at Object.<anonymous> (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:88778:90)
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:310:30)
+      at /usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:328:14
+      at new Promise (<anonymous>)
+      at new F (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:5301:28)
+      at Object.<anonymous> (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:307:12)
+      at Object.run (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:88817:17)
+      at run (/usr/local/Cellar/yarn/1.22.0/libexec/lib/cli.js:92318:22)
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
