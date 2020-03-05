@@ -26,7 +26,20 @@ echo "$packages" | tr ' ' '\n' | while read -r item; do
 	run_file="$dir/.github/tests/$(dirname $item)/run.sh"
 
 	if [ -f "$run_file" ]; then
+		set +e
 		sh "$run_file"
+		code=$?
+		set -e
+
+		if [ $code -ne 0 ] && [ "$GITHUB_REF" = "refs/heads/master" ]; then
+			export webhook="$SLACK_WEBHOOK_URL_FAILING"
+			version="$(cat .github/prisma-version.txt)"
+			sha="$(git rev-parse HEAD | cut -c -7)"
+			(cd .github/slack/ && yarn install)
+			node .github/slack/notify.js "$sha: $(dirname $item) failed using prisma@$version"
+		fi
+
+		exit $code
 	else
 		echo "no test file set up for $item,"
 		echo "please create a test shell file at $run_file"
