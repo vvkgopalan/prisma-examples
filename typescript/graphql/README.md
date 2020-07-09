@@ -202,10 +202,11 @@ For the following example scenario, assume you want to add a "profile" feature t
 The first step would be to add a new table, e.g. called `Profile`, to the database. Navigate back to `~/code/yugabyte-db
 
 ```./bin/ysqlsh
-CREATE TABLE "Profile" (
-  "id" INTEGER NOT NULL PRIMARY KEY,
-  "bio" TEXT,
-  "user" INTEGER NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE SET NULL
+CREATE TABLE "public"."Profile" (
+  id SERIAL PRIMARY KEY NOT NULL,
+  bio TEXT,
+  "userId" INTEGER UNIQUE NOT NULL,
+  FOREIGN KEY ("userId") REFERENCES "public"."User"(id)
 );
 ```
 
@@ -227,26 +228,56 @@ The `introspect` command updates your `schema.prisma` file. It now includes the 
 
 ```prisma
 model Post {
-  author    User?
+  authorId  Int
   content   String?
-  id        Int     @id
-  published Boolean @default(false)
+  createdAt DateTime @default(now())
+  id        Int      @default(autoincrement()) @id
+  published Boolean  @default(false)
   title     String
+  User      User     @relation(fields: [authorId], references: [id])
+}
+
+model Profile {
+  bio    String?
+  id     Int     @default(autoincrement()) @id
+  userId Int     @unique
+  User   User    @relation(fields: [userId], references: [id])
 }
 
 model User {
   email   String   @unique
-  id      Int      @id
+  id      Int      @default(autoincrement()) @id
   name    String?
-  post    Post[]
-  profile Profile?
+  Post    Post[]
+  Profile Profile?
+}
+```
+
+Which will need to be changed to the following:
+```prisma
+model Post {
+  authorId  Int
+  content   String?
+  createdAt DateTime @default(now())
+  id        Int      @default(autoincrement()) @id
+  published Boolean  @default(false)
+  title     String
+  user      User     @relation(fields: [authorId], references: [id])
 }
 
 model Profile {
-  bio  String?
-  id   Int     @default(autoincrement()) @id
-  user Int     @unique
-  User User    @relation(fields: [user], references: [id])
+  bio    String?
+  id     Int     @default(autoincrement()) @id
+  userId Int     @unique
+  author User    @relation(fields: [userId], references: [id])
+}
+
+model User {
+  email   String   @unique
+  id      Int      @default(autoincrement()) @id
+  name    String?
+  posts   Post[]
+  profile Profile?
 }
 ```
 
