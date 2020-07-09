@@ -262,14 +262,14 @@ model Post {
   id        Int      @default(autoincrement()) @id
   published Boolean  @default(false)
   title     String
-  user      User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id])
 }
 
 model Profile {
   bio    String?
   id     Int     @default(autoincrement()) @id
   userId Int     @unique
-  author User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
 }
 
 model User {
