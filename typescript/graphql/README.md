@@ -10,9 +10,9 @@ If you are unfamiliar with Yugabyte and creating a simple cluster, please procee
 
 The alternative to creating a local cluster is to create a cluster using [Yugabyte Cloud](https://www.yugabyte.com/cloud/) - Yugabyte's fully managed service. You can register for the free cloud tier which includes 5GB of storage that will be replicated across 3 nodes. In order to create a cluster proceed through the following steps:
 
-After registering for the service and logging in, create a Free Tier cluster [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud1.png)
-Then select deployment options from the Free Tier available options [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud2.png)
-And finally view your newly created cluster on this screen [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud3.png)
+After registering for the service and logging in, create a Free Tier cluster ![here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud1.png?raw=true)
+Then select deployment options from the Free Tier available options ![here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud2.png?raw=true)
+And finally view your newly created cluster on this screen ![here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud3.png?raw=true)
 
 ### 2. Load some sample data into your new Yugabyte database.
 
