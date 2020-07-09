@@ -1,8 +1,40 @@
 # GraphQL Server Example
 
-This example shows how to implement a **GraphQL server with TypeScript** based on [Prisma Client](https://github.com/prisma/prisma2/blob/master/docs/prisma-client-js/api.md), [graphql-yoga](https://github.com/prisma/graphql-yoga) and [Nexus Schema](https://nxs.li/components/standalone/schema). It is based on a SQLite database, you can find the database file with some dummy data at [`./prisma/dev.db`](./prisma/dev.db).
+This example shows how to implement a **GraphQL server with TypeScript** based on [Prisma Client](https://github.com/prisma/prisma2/blob/master/docs/prisma-client-js/api.md), [graphql-yoga](https://github.com/prisma/graphql-yoga) and [Nexus Schema](https://nxs.li/components/standalone/schema). It is based on a Yugabyte database using the YSQL (Postgres wire-compatible) API.
 
-## How to use
+## Prerequisites 
+
+### 1. Get started with Yugabyte and get a cluster up and running!
+
+If you are unfamiliar with Yugabyte and creating a simple cluster, please proceed to this handy [Quick Start](https://docs.yugabyte.com/latest/quick-start/) page to learn more.
+
+The alternative to creating a local cluster is to create a cluster using [Yugabyte Cloud](https://www.yugabyte.com/cloud/) - Yugabyte's fully managed service. You can register for the free cloud tier which includes 5GB of storage that will be replicated across 3 nodes. In order to create a cluster proceed through the following steps:
+
+After registering for the service and logging in, create a Free Tier cluster [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud1.png)
+Then select deployment options from the Free Tier available options [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud2.png)
+And finally view your newly created cluster on this screen [here](https://github.com/vvkgopalan/prisma-examples/blob/master/images/yb_cloud3.png)
+
+### 2. Load some sample data into your new Yugabyte database.
+
+Once your cluster is up and running, we will now load some dummy data by doing the following. First, you will need to navigate to `~/code/yugabyte-db` or wherever you have cloned the `yugabyte-db` repository and connect to your Yugabyte database. If you are using a local cluster, connect to the `yugabyte` database by running `./bin/ysqlsh`. If you are using the Free Cloud Tier, navigate to your cluster and view the connection information by clicking `Connect`. Copy that command and run it locally.
+
+Now once you have connected to the default `yugabyte` database in your cluster by running the above command, load your data via `\i ~/code/prisma-examples/typescript/graphql/prisma/dbcommands.sql`. 
+
+### 3. Add connection information to Prisma environment file. 
+
+Navigate to `~/code/prisma-examples/typescript/graphql/prisma` and modify the `.env` file. To connect your database, you need to set the URL field of the datasource block in your Prisma schema to your database connection URL. In this case, the url is set via an environment variable which is defined in `.env` of the form:
+```
+DATABASE_URL="postgresql://user:password@host:port/db?schema=name"
+```
+You will need to change it to the following (if running locally):
+```
+DATABASE_URL="postgresql://yugabyte@127.0.0.1:5433/yugabyte"
+```
+If you specified a host and port during cluster creation, you can replace `localhost:5433` with that by fetching it from running `~/code/yugabyte-db/bin/yb-ctl status`.
+
+The parameters for this connection string when using the Free Cloud Tier can be found by navigating to the connection info as you did previously and replacing `user, password, host, and port` accordingly. Replace `db` with `yugabyte` and leave schema empty (default to the public schema). 
+
+## How to use Prisma
 
 ### 1. Download example & install dependencies
 
@@ -167,25 +199,14 @@ For the following example scenario, assume you want to add a "profile" feature t
 
 ### 1. Change your database schema using SQL
 
-The first step would be to add a new table, e.g. called `Profile`, to the database. In SQLite, you can do so by running the following SQL statement:
+The first step would be to add a new table, e.g. called `Profile`, to the database. Navigate back to `~/code/yugabyte-db
 
-```sql
+```./bin/ysqlsh
 CREATE TABLE "Profile" (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "id" INTEGER NOT NULL PRIMARY KEY,
   "bio" TEXT,
   "user" INTEGER NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE SET NULL
 );
-```
-
-To run the SQL statement against the database, you can use the `sqlite3` CLI in your terminal, e.g.:
-
-```bash
-sqlite3 dev.db \
-'CREATE TABLE "Profile" (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "bio" TEXT,
-  "user" INTEGER NOT NULL UNIQUE REFERENCES "User"(id) ON DELETE SET NULL
-);'
 ```
 
 Note that we're adding a unique constraint to the foreign key on `user`, this means we're expressing a 1:1 relationship between `User` and `Profile`, i.e.: "one user has one profile".
