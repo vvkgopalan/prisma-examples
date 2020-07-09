@@ -13,7 +13,7 @@ type Post {
   author: User
   content: String
   id: Int!
-  published: Boolean!
+  published: Boolean
   title: String!
 }
 
@@ -24,6 +24,7 @@ input PostCreateManyWithoutAuthorInput {
 
 input PostCreateWithoutAuthorInput {
   content: String
+  id: Int!
   published: Boolean
   title: String!
 }
@@ -47,6 +48,7 @@ type User {
 
 input UserCreateInput {
   email: String!
+  id: Int!
   name: String
   posts: PostCreateManyWithoutAuthorInput
 }
