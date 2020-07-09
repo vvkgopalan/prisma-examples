@@ -293,7 +293,7 @@ This command updated the Prisma Client API in `node_modules/@prisma/client`.
 
 ### 4. Use the updated Prisma Client in your application code
 
-#### Option A: Expose `Profile` operations via `nexus-prisma`
+#### Expose `Profile` operations via `nexus-prisma`
 
 With the `nexus-prisma` package, you can expose the new `Profile` model in the API like so:
 
@@ -330,54 +330,6 @@ export const schema = makeSchema({
 +  types: [Query, Mutation, Post, User, Profile],
   // ... as before
 }
-```
-
-#### Option B: Use the `PrismaClient` instance directly
-
-As the Prisma Client API was updated, you can now also invoke "raw" operations via `prisma.profile` directly.
-
-##### Create a new profile for an existing user
-
-```ts
-const profile = await prisma.profile.create({
-  data: {
-    bio: "Hello World",
-    user: {
-      connect: { email: "alice@prisma.io" },
-    },
-  },
-});
-```
-
-##### Create a new user with a new profile
-
-```ts
-const user = await prisma.user.create({
-  data: {
-    email: "john@prisma.io",
-    name: "John",
-    profile: {
-      create: {
-        bio: "Hello World",
-      },
-    },
-  },
-});
-```
-
-##### Update the profile of an existing user
-
-```ts
-const userWithUpdatedProfile = await prisma.user.update({
-  where: { email: "alice@prisma.io" },
-  data: {
-    profile: {
-      update: {
-        bio: "Hello Friends",
-      },
-    },
-  },
-});
 ```
 
 ## Next steps
