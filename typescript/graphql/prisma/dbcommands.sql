@@ -1,19 +1,20 @@
 BEGIN TRANSACTION;
-CREATE TABLE IF NOT EXISTS "User" ( 
-	email TEXT NOT NULL UNIQUE, 
-	id INTEGER PRIMARY KEY, 
-	name TEXT
+CREATE TABLE "public"."User" (
+  id SERIAL PRIMARY KEY NOT NULL,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE NOT NULL
 );
-INSERT INTO "User" VALUES('graphql@yugabyte.com',1,'GraphQL');
-INSERT INTO "User" VALUES('prisma@yugabyte.com',2,'Prisma');
-CREATE TABLE IF NOT EXISTS "Post" (
-	authorId INTEGER,
-	content TEXT,
-	id INTEGER PRIMARY KEY,
-	published BOOLEAN DEFAULT false,
-	title TEXT NOT NULL,
-	FOREIGN KEY(authorId) REFERENCES "User"(id) ON DELETE SET NULL
+INSERT INTO "User" VALUES(1, 'GraphQL', 'graphql@yugabyte.com');
+INSERT INTO "User" VALUES(2, 'Prisma', 'prisma@yugabyte.com');
+CREATE TABLE "public"."Post" (
+  id SERIAL PRIMARY KEY NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  content TEXT,
+  published BOOLEAN NOT NULL DEFAULT false,
+  "authorId" INTEGER NOT NULL,
+  "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
+  FOREIGN KEY ("authorId") REFERENCES "public"."User"(id)
 );
-INSERT INTO "Post" VALUES(2,'https://docs.yugabyte.com/latest/develop/graphql/prisma/',1,False,'Learn how to use Yugabyte with Prisma.');
-INSERT INTO "Post" VALUES(1,'https://docs.yugabyte.com/latest/develop/graphql/',2,True,'Learn more about Yugabyte and GraphQL.');
+INSERT INTO "Post" VALUES(1, 'Learn how to use Yugabyte with Prisma.', 'https://docs.yugabyte.com/latest/develop/graphql/prisma/', False, 2);
+INSERT INTO "Post" VALUES(2, 'Learn more about Yugabyte and GraphQL.', 'https://docs.yugabyte.com/latest/develop/graphql/', True, 1);
 COMMIT;
